@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.3.6/ractive.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/ractive-transitions-fade"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ractive-transitions-slide"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ractive-transitions-fly"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="target"></div>
+
+    <script id="template" type="text/ractive">
+
+        <section class="card card-4">
+            <h1 class="header">Nested Properties</h1>
+            <p class="description">Ractive uses the mustache syntax, which supports nested properties</p>
+            <h2>Country profile</h2>
+            
+            <p>{{country.name}} is a {{country.climate.temperature}} country with {{country.climate.rainfall}} rainfall and a population of {{country.population}}.</p>
+            
+            <p>The capital city is {{country.capital.name}} (<a href='https://maps.google.co.uk/maps/place/{{country.capital.name}}/@{{country.capital.lat}},{{country.capital.lon}},12z' target='_blank'>see map</a>).</p>
+        
+            {{#country}}
+                <span>Step 2: using -#with (optional) section-</span>
+                <p>{{name}} is a {{climate.temperature}} country with {{climate.rainfall}} rainfall and a population of {{population}}.</p>
+
+                {{#with capital}}
+                    Its capital is: {{name}}
+                {{/with}}
+            {{/with}}
+        </section>
+
+        <section class="card card-4">
+            <h1 class="header">Expressions</h1>
+            <p class="description">Expressions look just like regular mustaches. Note that expressions are not part of the mustache syntax – they are specific to Ractive.js.</p>
+            <h2 class="header">Format</h2>
+            {{#country}}
+                Formated population: {{ format(population) }}
+                Price: {{ currency(price) }}
+            {{/with}}
+
+            <div>The Math object is one of several built-in JavaScript objects you have direct access to within expressions</div>
+            <p>red:</p>
+            <div style='background-color: red; width: {{red * 100}}%; height: 1em;'></div>
+            
+            <p>green:</p>
+            <div style='background-color: green; width: {{green * 100}}%; height: 1em;'> </div>
+            
+            <p>blue:</p>
+            <div style='background-color: blue; width: {{blue * 100}}%; height: 1em;'> </div>
+
+        </section>
+
+        <section class="card card-4">
+            <h1 class="header">Events</h1>
+            <p class="description">DOM events are central to anything interactive on the web.</p>
+            <p>@this is a reference to the Ractive.js instance that is controlling the template, 
+                so you can call any methods on the Ractive.js API with the @this special reference. 
+                Since @this is a very common reference, it also has an ever so slightly shorter shorthand @</p>
+            <h2 class="header">Format</h2>
+
+            <button on-click="@global.alert( 'Activating!' )">Activate!</button>
+
+            <button on-click="@this.subtract( 'number' )">-</button>
+            {{number}}
+            <button on-click="@this.add( 'number' )">+</button>
+    
+
+            <table>
+                <tr>
+                    <th>Me</th><th>Sibling</th>
+                </tr>
+                <tr>
+                    <td>
+                    {{#with me}}
+                        {{.cows}}
+                        <button on-click="@context.add( '.cows' )">+</button><br/>
+                        <button on-click="@context.set( '.cows', 0 )">I'll miss you, cows</button>
+                    {{/with}}
+                    </td>
+                    <td>
+                    {{#with sibling}}
+                        {{.cows}}
+                        <button on-click="@context.add( '.cows' )">+</button><br/>
+                        <button on-click="@context.set( '.cows', 0 )">Hah! You lost your cows</button>
+                    {{/with}}
+                    </td>
+                </tr>
+            </table>
+
+
+            <div id="tracker" on-mousemove="@.set({ x: @event.clientX, y: @event.clientY })" on-click="console.log(`firing at (${@event.clientX}, ${@event.clientY})!`)">
+                ({{x}}, {{y}})
+            </div>
+
+            <button on-click="@.fire( 'activates' )">Activate!</button>
+            <button on-click="@.fire( 'deactivate' )">Deactivate!</button>
+
+            <p>"proxy event"</p>
+            <!-- convenient shorthand method for firing and instance event from an event directive -->
+            <button on-click="['activate', user]">Activate!</button>
+
+            <button on-click="['toggle']">{{ silenced ? 'Resume!' : 'Silence!' }}</button>
+
+        </section>
+
+        <section class="card card-4">
+            <h1 class="header">Conditional Sections</h1>
+            <p class="description">Show or hide part of your view depending on whether a particular condition is met</p>
+
+            {{#if signedIn}}
+                <!-- message for signed-in users -->
+                <p>Welcome back, {{username}}!</p>
+            {{/if}}
+            
+            {{#if notSignedIn}}
+                <!-- message for non-signed-in users -->
+                <p>Hi there! Please <a on-click='@.signIn()'>sign in</a></p>
+            {{/if}}
+
+            {{#unless signedIn}}
+                <!-- not-signed-in block -->
+            {{/unless}}
+
+            {{#if role == 'admin'}}
+                <!-- signed-in block -->
+                <div>You have the rol of administrator</div>
+            {{elseif role == 'teacher'}}
+                <!-- not-signed-in block -->
+                <div>You have the rol of teacher</div>
+            {{elseif role == 'student'}}
+                <div>You have the rol of student</div>
+            {{else}}
+                <div>You dont have currently a role</div>
+            {{/if}}
+
+        </section> 
+
+        <section class="card card-4">
+            <h1 class="header">Iterative Sections</h1>
+            <p class="description"></p>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th class="sortable" class-sorted="sortColumn === 'name'" on-click="@.sort('name')">Superhero name</th>
+                    <th class="sortable" class-sorted="sortColumn === 'realname'" on-click="@.sort('realname')">Real name</th>
+                    <th class="sortable" class-sorted="sortColumn === 'power'" on-click="@.sort('power')">Superpower</th>
+                </tr>
+                
+                {{#each sort( superheroes ): num}}
+                    <!-- inside here, {{num}} is the index -->
+                    <tr>
+                        <td>{{num + 1}}</td>
+                        <td><a href='{{info}}'>{{name}}</a></td>
+                        <td>{{realname}}</td>
+                        <td>{{power}}</td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="4">Oh no! There are no superheroes!</td>
+                    </tr>
+                {{/each}}
+            </table>
+
+        </section> 
+
+        <section class="card card-4">
+            <h1 class="header">Two-way Binding</h1>
+            <p class="description">Most data-binding in a template only goes in one direction - from the model to the view, but form elements provide a point at which the view could update the model</p>
+
+            <label>
+                Enter your name:
+                <input value='{{name}}'>
+            </label>
+            
+            <p>Hello, {{name}}!</p>
+
+            <label><input type='radio' name='{{color}}' value='red' checked> red</label>
+            <label><input type='radio' name='{{color}}' value='green'> green</label>
+            <label><input type='radio' name='{{color}}' value='blue'> blue</label>
+            <p>The selected colour is <span style='color: {{color}};'>{{color}}</span>.</p>
+
+            <select value='{{color}}'>
+                {{#each colors}}
+                    <option>{{this}}</option>
+                {{/each}}
+            </select>
+        </section>    
+
+        <section class="card card-4">
+            <h1 class="header">Partials</h1>
+            <p class="description">Partials are a good way to split complex templates up into several more manageable chunks. They also allow re-use of bits of template without having to repeat the template.</p>
+
+            <h2>To-do list</h2>
+
+            <input on-change="newTodo" placeholder='What needs to be done?'>
+            
+            <ul class='todos'>
+            {{#each items: i}}
+                {{>item}}
+            {{/each}}
+            </ul>
+            
+            {{#partial item}}
+                <li class-done='.done'>
+                    <input type='checkbox' checked='{{.done}}'>
+                    <span class='description' on-click="edit">
+                    {{.description}}
+                
+                    {{#if .editing}}
+                        <input class='edit'
+                            value='{{.description}}'
+                            on-blur='@context.toggle( ".editing" ), false'
+                            on-keydown="@.enterExit( @event, @context )">
+                    {{/if}}
+                    </span>
+                    <button class='button' on-click='@context.splice( "../", @index, 1 )'>×</button>
+                </li>
+            {{/partial}}
+
+            <h2>Lots of Yachts</h2>
+            {{#each yachts}}
+                <div>
+                    {{>name}} - owner {{>name .owner}}
+                </div>
+            {{/each}}
+
+        </section>   
+        
+        <section class="card card-4">
+                <h1 class="header">Triples (Embedded HTML)</h1>
+                <p class="description">But occasionally you need to insert chunks of HTML into your view – for that, we have the triple-stache: {{{content}}}</p>
+                <p>This is a normal mustache: {{content}}</p>
+                <p>And this is a triple mustache: {{{content}}}</p>
+        </section>
+
+        <section class="card card-4">
+                <h1 class="header">Components</h1>
+                <p class="description">(Backbone Views) Concept of extending the base class to create a new subclass with default data and additional methods</p>
+        
+                <#main />
+        </section>
+        
+        <section class="card card-4">
+            <h1 class="header">Animation</h1>
+            <p class="description">communicating changing states of your webapp</p>
+            
+            <div class='temperatures'>
+                <!-- header and options -->
+                <div class='header'>
+                  <h2>Average high and low temperature</h2>
+                  <!-- switch between celsius and fahrenheit -->
+                  <div class='radio-group'>
+                    <label>°C <input type='radio' name='{{degreeType}}' value='celsius' checked></label>
+                    <label>°F <input type='radio' name='{{degreeType}}' value='fahrenheit'></label>
+                  </div>
+              
+                  <!-- dropdown menu -->
+                  <select value='{{selectedIndex}}'>
+                    {{#each cities: i}}
+                      <option value='{{i}}'>{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              
+                <!-- the chart -->
+                <div class='bar-chart'>
+                  {{#with selectedCity}}
+              
+                    <!-- 12 sections, one for each month -->
+                    {{#each months: i}}
+                      <div class='bar-group' style='width: {{ 100 / months.length }}%;'>
+              
+                        <!-- average high temperature -->
+                        <div class='bar-outer high {{ (high >= 0) ? "positive" : "negative" }}' style='height: {{ scale(high) }}%;'>
+                          <div class='bar-inner' style='background-color: {{ getColor(high) }};'></div>
+                          <span>{{ formatBar(high) }}</span>
+                        </div>
+              
+                        <!-- average low temperature -->
+                        <div class='bar-outer low {{ (low >= 0) ? "positive" : "negative" }}' style='height: {{ scale(low) }}%;'>
+                          <div class='bar-inner' style='background-color: {{ getColor(low) }};'></div>
+                          <span>{{ formatBar(low) }}</span>
+                        </div>
+              
+                        <!-- month label (JFMAMJJASOND) -->
+                        <span class='month-label'>{{ monthNames[i] }}</span>
+                      </div>
+                    {{/each}}
+                  {{/with}}
+              
+                  <!-- horizontal line representing freezing -->
+                  <div class='axis'></div>
+                </div>
+              </div>
+        </section>
+
+        <section class="card card-4">
+            <h1 class="header">Transitions</h1>
+            <p class="description">Normally, when an element is rendered, it just sort of gets plonked on the page.</p>
+    
+            {{#if visible === 1 }}
+                <button on-click="['show', 2]" fade-in>Click me!</button>
+            {{elseif visible === 2 }}
+                <button on-click="['show', 3]" slide-in>And me!</button>
+            {{elseif visible === 3 }}
+                <button on-click="['show', 1]" fly-in>Now click me!</button>
+            {{/if}}
+
+            <div fade-in>
+                This div will fade into view
+            </div>
+        </section>
+    </script>
+
+    <script id="slideshow" type="text/ractive">
+        <div class='slideshow'>
+          <div class='main'>
+            <a class='prev' on-click="goto(current - 1)"><span>&laquo;</span></a>
+            {{#if images[current]}}<div class='main-image'
+                 style='background-image: url("{{images[current].src}}");'>
+            </div>{{/if}}
+            <a class='next' on-click="goto(current + 1)"><span>&raquo;</span></a>
+          </div>
+        
+          <div class='caption'>
+            <p>{{images[current].caption}}</p>
+          </div>
+        </div>
+    </script>
+
+    <!-- Ractive.js has a sugared version of a partial that accepts a context after the partial name: -->
+    <!-- <script id="name" type="text/ractive">
+        {{#if .type === 'business'}}
+            {{.name}}{{.classifier ? `, ${.classifier}` : ''}}
+        {{elseif .type === 'yacht'}}
+            {{name}}
+        {{else}}
+            {{.familyName}}, {{.givenName}}{{.suffix ? ` ${.suffix}` : ''}}
+        {{/if}}
+    </script> -->
+
+    <script src="script.js"></script>
+</body>
+</html>

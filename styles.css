@@ -1,0 +1,302 @@
+html {
+	font-family: sans-serif;
+}
+
+body {
+    padding: 5em;
+    background: #f7f4f4;
+}
+
+table {
+	border-spacing: 0;
+}
+
+th {
+	text-align: left;
+	background-color: #222;
+	color: #eee;
+}
+th.sortable {
+	cursor: pointer;
+}
+th.sortable:before {
+	content: '▾';
+	color: #555;
+	margin-right: 0.5em;
+}
+th.sortable.sorted:before {
+	color: #eee;
+}
+
+td {
+	border-bottom: 1px solid #ddd;
+}
+tr > * {
+	padding: 0.5em;
+}
+
+#target {
+    /* position: relative;
+    left: 50%;
+    top: 50%; */
+    /* border-radius: 5px;
+    border: 1px solid #ccc; */
+    padding: 2em;
+    display: flex;
+    /* flex-direction: row;
+    flex-wrap: wrap; */
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.header {
+    border-bottom: 1px solid #ccc;
+}
+
+.card {
+    background: #fff;
+    border-radius: 2px;
+    padding: 3em;
+    margin: 2em;
+    flex: 0 0 350px;
+    flex-basis: 20%;
+    -ms-flex: auto;
+}
+.card-4 {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.card-5 {
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+
+input[placeholder] {
+	width: 100%;
+	max-width: 20em;
+	padding: 0.4em;
+	font-size: inherit;
+	font-family: inherit;
+	box-sizing: border-box;
+}
+
+ul {
+	padding: 0;
+	border-top: 1px solid #f0f0f0;
+	max-width: 20em;
+	list-style: none;
+}
+li {
+	position: relative;
+	padding: 0.5em 3em 0.5em 2em;
+	border-bottom: 1px solid #eee;
+	margin: 0;
+	min-height: 1em;
+}
+li:hover {
+	background-color: #f9f9f9;
+}
+li:hover > button {
+	opacity: 1;
+}
+li.done > span {
+	text-decoration: line-through;
+	opacity: 0.5;
+}
+li > input[type=checkbox] {
+	position: absolute;
+	left: 0.5em;
+	top: 0.7em;
+}
+li > button {
+	border: none;
+	background-color: red;
+	color: #fff;
+	position: absolute;
+	right: 0.5em;
+	top: 0.7em;
+	opacity: 0.4;
+}
+li > span {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+li > span > input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+	font-size: inherit;
+	font-family: inherit;
+}
+
+
+@media(max-width: 1333px) {
+	.card {
+		flex-basis: 33.33%;
+	}
+}
+@media(max-width: 1073px) {
+		.card {
+		flex-basis: 33.33%;
+	}
+}
+@media(max-width: 815px) {
+	.card {
+		flex-basis: 50%;
+	}
+}
+@media(max-width: 555px) {
+	.card {
+		flex-basis: 100%;
+	}
+}
+	
+
+#target {
+	height: 100%;
+}
+
+.radio-group {
+	position: absolute;
+	right: 1em;
+	top: 0.5em;
+}
+
+.temperatures {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 6em 0 0 0;
+	box-sizing: border-box;
+}
+
+/* .header {
+	position: absolute;
+	top: 0;
+	width: 100%;
+} */
+
+.bar-chart {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0 0 3em 0;
+	box-sizing: border-box;
+}
+
+.bar-chart span {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	font-size: 0.7em;
+	line-height: 0;
+	z-index: 6;
+}
+
+.month-label {
+	bottom: -2em;
+}
+
+.bar-group {
+	position: relative;
+	width: 8.3333333334%;
+	height: 100%;
+	float: left;
+	text-align: center;
+}
+
+.bar-outer {
+	position: absolute;
+	width: 100%;
+	padding: 0 1px;
+	box-sizing: border-box;
+}
+
+.bar-outer.positive {
+	bottom: 20%;
+}
+.bar-outer.negative {
+	top: 80%;
+}
+.bar-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+.bar-outer.positive .bar-inner {
+	border-radius: 2px 2px 0 0;
+	border-left: 1px solid #333;
+	border-right: 1px solid #333;
+	border-top: 1px solid #333;
+	bottom: 0;
+}
+.bar-outer.negative .bar-inner {
+	border-radius: 0 0 2px 2px;
+	border-left: 1px solid #333;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	top: 0;
+}
+
+.positive span {
+	top: 0.8em;
+	font-weight: bold;
+}
+
+.negative span {
+	bottom: -0.8em;
+	font-weight: bold;
+}
+
+.low.positive span, .high.negative span {
+	color: #fff;
+	text-shadow: 0 0 3px rgba(0,0,0,1), 0 0 3px rgba(0,0,0,1), 0 0 3px rgba(0,0,0,1);
+}
+
+.high.positive span {
+	top: -0.8em;
+}
+
+.high.negative span {
+	bottom: 0.8em;
+}
+
+.high.negative {
+	z-index: 4;
+}
+
+.axis {
+	position: relative;
+	width: 100%;
+	height: 0;
+	border-top: 1px solid #333;
+	z-index: 5;
+	left: 0;
+	top: 80%;
+}
+
+
+
+/*
+
+    L:      7 // 06:00pm - 11:00pm
+    K:      7 // 06:00pm - 11:00pm
+    M:      2 // 
+    J:      7 // 06:00pm - 11:00pm
+    V:      2 // 
+    S:      7 // 02:00pm - 09:00pm
+    D:      8 // 08:00pm - 04:00pm
+    TOTAL: 40 hrs.
+    TOTAL WEEK: 
+
+*/
